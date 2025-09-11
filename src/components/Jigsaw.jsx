@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import ConfettiBurst from "./jsx_Jixsaw/ConfettiBurst";
 import generateEdges from "./jsx_Jixsaw/generateEdges";
 import buildPiecePath from "./jsx_Jixsaw/buildPiecePath";
@@ -145,9 +146,9 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
       <motion.nav className="bd-navbar" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
         <div className="bd-container bd-nav-row">
           <div style={{ display: "flex", gap: 8 }}>
-            <a href="/" className="bd-btn bd-btn-primary" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <Link to="/" className="bd-btn bd-btn-primary" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}>
               <Heart size={16} /> Return
-            </a>
+            </Link>
           </div>
         </div>
       </motion.nav>

@@ -10,6 +10,7 @@ import Carousel from "./jsx_BirthDay/Carousel";
 import LoveLetter from "./jsx_BirthDay/LoveLetter";
 import SiteFooter from "./jsx_BirthDay/SiteFooter";
 import ImageGridPlaceholders from "./jsx_BirthDay/ImageGridPlaceholders";
+import { Link } from "react-router-dom";
 
 export default function BirthdaySite({
   celebrant = "LookNut",    
@@ -117,15 +118,30 @@ function Hero({ celebrant, isPast, d, h, m, s, heroImage }) {
           </p>
           <Countdown isPast={isPast} d={d} h={h} m={m} s={s} />
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 12 }}>
-            <a href="#gallery" className="bd-btn bd-btn-ghost" style={{ textDecoration: "none" }}>
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" }); }}
+              className="bd-btn bd-btn-ghost"
+              style={{ textDecoration: "none" }}
+              role="button"
+            >
               <Images size={16} color="#e11d48" /> Memories
             </a>
-            <a href="#letter" className="bd-btn bd-btn-primary" style={{ textDecoration: "none" }}>
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); document.getElementById("letter")?.scrollIntoView({ behavior: "smooth" }); }}
+              className="bd-btn bd-btn-primary"
+              style={{ textDecoration: "none" }}
+              role="button"
+            >
               <Heart size={16} /> Open Love Letter
             </a>
-            <a href="/jigsaw" className="bd-btn bd-btn-primary" style={{ textDecoration: "none" }}>
+            <Link to="/jigsaw" className="bd-btn bd-btn-primary" style={{ textDecoration: "none" }}>
               <Heart size={16} /> Play Jigsaw
-            </a>
+            </Link>
+            <Link to="/messages" className="bd-btn" style={{ textDecoration: "none" }}>
+              <Heart size={16} color="#e11d48" /> Love Messages
+            </Link>
           </div>
         </motion.div>
 

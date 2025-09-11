@@ -326,3 +326,52 @@
   transition: transform .15s ease;
 }
 .bd-cta-link:hover { transform: translateY(-1px); }
+
+/* Mouse-follow glow */
+.bd-mouse-glow {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  --mx: -9999px;
+  --my: -9999px;
+  background: radial-gradient(360px 240px at var(--mx) var(--my), color-mix(in oklab, var(--bd-theme) 10%, #ffffff) 0%, #ffffff00 55%);
+}
+
+/* Enhance route transition smoothing */
+.bd-route-wrap {
+  will-change: opacity, transform;
+}
+
+/* Mouse sparkle canvas */
+.bd-mouse-sparkle {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Hide mouse FX layers if present */
+.bd-mouse-glow, .bd-mouse-sparkle { display: none !important; }
+
+/* Global rabbit speech-bubble cursor */
+html, body, .birthday-site {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M4 18c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c-1.47 0-2.86-.318-4.111-.889L4 28l.889-5.889C4.318 20.86 4 19.47 4 18z' fill='%23ffffff'/%3E%3Cpath d='M18.5 7.5c-.5-2 1-5 2.5-5s2 2 1.5 4-2 3-4 1z' fill='%23ff9bb2'/%3E%3Cpath d='M12.5 7.5c-.5-2 1-5 2.5-5s2 2 1.5 4-2 3-4 1z' fill='%23ff89a4'/%3E%3Ccircle cx='11' cy='18' r='1.2' fill='%23ff4d78'/%3E%3Ccircle cx='17' cy='18' r='1.2' fill='%23ff4d78'/%3E%3Cpath d='M12 21c1.333.667 2.667.667 4 0' stroke='%23ff4d78' stroke-width='1.2' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 4 2, auto;
+}
+
+/* Pointer cursor for clickable */
+button, [role="button"], a, .bd-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M4 18c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c-1.47 0-2.86-.318-4.111-.889L4 28l.889-5.889C4.318 20.86 4 19.47 4 18z' fill='%23fff2f5'/%3E%3Cpath d='M18.5 7.5c-.5-2 1-5 2.5-5s2 2 1.5 4-2 3-4 1z' fill='%23ff7396'/%3E%3Cpath d='M12.5 7.5c-.5-2 1-5 2.5-5s2 2 1.5 4-2 3-4 1z' fill='%23ff6a8e'/%3E%3Ccircle cx='11' cy='18' r='1.2' fill='%23ff2e64'/%3E%3Ccircle cx='17' cy='18' r='1.2' fill='%23ff2e64'/%3E%3Cpath d='M12 21c1.333.667 2.667.667 4 0' stroke='%23ff2e64' stroke-width='1.2' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 4 2, pointer; }
+
+/* Polished cards */
+.bd-card { box-shadow: 0 12px 28px rgba(17,24,39,0.08); border: 1px solid color-mix(in oklab, var(--bd-border) 90%, #ffffff); }
+
+/* Headings tweak */
+.bd-section-title { letter-spacing: .2px; }
+
+/* Buttons polish */
+.bd-btn { transition: transform var(--bd-speed) var(--bd-bezier), box-shadow var(--bd-speed) var(--bd-bezier), background var(--bd-speed) var(--bd-bezier); }
+.bd-btn:hover { transform: translateY(-1.5px); }
+
+/* Return button style */
+.bd-btn-return { background: #fff; border-color: #e5e7eb; }
+.bd-btn-return:hover { background: #f9fafb; }

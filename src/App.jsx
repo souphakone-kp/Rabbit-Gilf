@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import BirthdaySite, { DEFAULT_REASONS } from "./components/birthDay";
 import "./index.css";
 import love from "./assets/love.png";
@@ -23,6 +23,7 @@ import r7 from "./assets/reason7.png";
 import r8 from "./assets/reason8.png";
 import r9 from "./assets/reason9.png";
 import r10 from "./assets/reason10.png";
+import Messages from "./components/Messages";
 export default function App() {
   const location = useLocation();
   const imgs = [love1, love2, love3, love4, love5, love6, love7];
@@ -32,6 +33,7 @@ export default function App() {
     <AnimatePresence mode="wait">
       <motion.div
         key={location.pathname}
+        className="bd-route-wrap"
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -8 }}
@@ -50,12 +52,14 @@ export default function App() {
                 themePrimary="#e11d48"
                 heroImage={love}
                 reasonsImages={reasonsImages}
-                loveVideoUrl={loveVideo}         // +++ pass the video
-                loveVideoPoster={love}           // + optional poster (image)
+                loveVideoUrl={loveVideo}
+                loveVideoPoster={love}
               />
             }
           />
           <Route path="/jigsaw" element={<Jigsaw images={imgs} defaultPieces={16} />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

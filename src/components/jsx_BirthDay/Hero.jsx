@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
  
 import { Heart, Images } from "lucide-react";
 
@@ -32,26 +33,30 @@ export default function Hero({ celebrant, isPast, d, h, m, s, heroImage }) {
             }}
           >
             <a
-              href="#gallery"
+              href="#"
+              onClick={(e) => { e.preventDefault(); document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" }); }}
               className="bd-btn bd-btn-ghost"
               style={{ textDecoration: "none" }}
+              role="button"
             >
               <Images size={16} color="#e11d48" /> Memories
             </a>
             <a
-              href="#letter"
+              href="#"
+              onClick={(e) => { e.preventDefault(); document.getElementById("letter")?.scrollIntoView({ behavior: "smooth" }); }}
               className="bd-btn bd-btn-primary"
               style={{ textDecoration: "none" }}
+              role="button"
             >
               <Heart size={16} /> Open Love Letter
             </a>
-            <a
-              href="/jigsaw"
+            <Link
+              to="/jigsaw"
               className="bd-btn bd-btn-primary"
               style={{ textDecoration: "none" }}
             >
               <Heart size={16} /> Play Jigsaw
-            </a>
+            </Link>
           </div>
         </motion.div>
 
