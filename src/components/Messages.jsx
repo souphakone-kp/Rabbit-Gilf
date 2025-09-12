@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import HeartLoading from "./HeartLoading";
 
 const API_BASE = "https://68c2fcadf9928dbf33f063ba.mockapi.io/Rabbi/api";
 const ENDPOINT = "rabitMessage"; // updated endpoint per spec
@@ -8,6 +9,7 @@ export default function Messages() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const [name, setName] = useState("Boss");
   const [message, setMessage] = useState("");
@@ -31,7 +33,14 @@ export default function Messages() {
   };
 
   useEffect(() => {
+    // Initial loading effect
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 1500);
+
     fetchMessages();
+
+    return () => clearTimeout(timer);
   }, []);
 
   const sorted = useMemo(() => {
@@ -73,6 +82,28 @@ export default function Messages() {
       alert(e.message || "Delete failed");
     }
   };
+
+  // แสดง initial loading screen
+  if (isInitialLoading) {
+    return (
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#fff7f9",
+        zIndex: 9999,
+      }}>
+        <HeartLoading size={100} color="#e11d48" />
+      </div>
+    );
+  }
 
   return (
     <div className="bd-container" style={{ padding: "2rem 0 3rem" }}>

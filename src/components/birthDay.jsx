@@ -11,6 +11,7 @@ import LoveLetter from "./jsx_BirthDay/LoveLetter";
 import SiteFooter from "./jsx_BirthDay/SiteFooter";
 import ImageGridPlaceholders from "./jsx_BirthDay/ImageGridPlaceholders";
 import { Link } from "react-router-dom";
+import HeartLoading from "./HeartLoading";
 
 export default function BirthdaySite({
   celebrant = "LookNut",    
@@ -23,6 +24,7 @@ export default function BirthdaySite({
   themePrimary = "#e11d48",
   reasonsImages = [],
   loveVideoUrl = "",
+  loveVideoUrls = [],
   loveVideoPoster = "",
 }) {
   const birthday = useMemo(
@@ -34,6 +36,7 @@ export default function BirthdaySite({
   const [confetti, setConfetti] = useState(false);
   const [confettiOnce, setConfettiOnce] = useState(false); 
   const [play, setPlay] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef(null);
 
   // Play/pause background song
@@ -43,6 +46,14 @@ export default function BirthdaySite({
     else audioRef.current.pause();
   }, [play]);
 
+  // Loading effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // แสดง loading 2 วินาที
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (isPast && !confettiOnce) {
@@ -54,6 +65,28 @@ export default function BirthdaySite({
   }, [isPast, confettiOnce]);
 
   const mainHero = heroImage || images[0] || null;  
+
+  // แสดง loading screen
+  if (isLoading) {
+    return (
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#fff7f9",
+        zIndex: 9999,
+      }}>
+        <HeartLoading size={100} color="#e11d48" />
+      </div>
+    );
+  }
 
   return (
     <div id="top" className="birthday-site" style={{ position: "relative" }}>
@@ -83,7 +116,7 @@ export default function BirthdaySite({
         />
         <Gallery images={images} />
         <ReasonsGrid reasons={reasons} reasonsImages={reasonsImages} />
-        <LoveLetter celebrant={celebrant} loveVideoUrl={loveVideoUrl} loveVideoPoster={loveVideoPoster} />
+        <LoveLetter celebrant={celebrant} loveVideoUrl={loveVideoUrl} loveVideoPoster={loveVideoPoster} loveVideoUrls={loveVideoUrls} />
       </main>
 
       <SiteFooter celebrant={celebrant} fromName={fromName} /> {/* +++ */}
@@ -169,8 +202,6 @@ function Hero({ celebrant, isPast, d, h, m, s, heroImage }) {
   );
 }
 
-
-
 function Gallery({ images }) {
   return (
     <section id="gallery" className="bd-container" style={{ paddingBottom: "4rem" }}>
@@ -187,7 +218,6 @@ function Gallery({ images }) {
   );
 }
 
- 
 function useCountdown(targetDate) {
     const [now, setNow] = useState(() => new Date());
     useEffect(() => {
@@ -204,16 +234,16 @@ function useCountdown(targetDate) {
   }
   
   export const DEFAULT_REASONS = [
-    { title: "Your smile", text: "It’s the sunshine that brightens every room." },
-    { title: "Your kindness", text: "You make people feel seen and loved." },
-    { title: "Your courage", text: "You chase dreams with a brave heart." },
-    { title: "Your laugh", text: "Contagious and my favorite sound." },
-    { title: "Your patience", text: "You always choose understanding." },
-    { title: "Your honesty", text: "Real, gentle, and powerful." },
-    { title: "Your passion", text: "You give your whole heart." },
-    { title: "Your creativity", text: "You see magic in small things." },
-    { title: "Your hugs", text: "Home. Always." },
-    { title: "Your love", text: "It makes me better every day." },
+    { title: "Your smile", text: "It's like a sunflower blooming in the warmest sunlight, brightening everything around me ✨." },
+    { title: "Your kindness", text: "You have this way of making everything feel simple and full of love. Your kindness always makes my heart feel full 💖." },
+    { title: "Your courage", text: "ou chase your dreams with a heart that never backs down, just like the Angry Bunny in your profile—strong and yet so lovable 🐰💪." },
+    { title: "Your sense of humor", text: "Your laughter and jokes always light up my day. You make me smile without even trying 😊." },
+    { title: "Your patience", text: "You're always so patient and understanding, making every challenge feel easier to face when I'm with you 🧘‍♂️." },
+    { title: "Your honesty", text: "You're always so real and honest, and it's not just powerful—it makes everything feel more genuine and meaningful ✨." },
+    { title: "Your passion", text: "The way you pour your heart into everything you do gives me endless inspiration and shows me the way forward every single day ❤️." },
+    { title: "Your creativity", text: "You see magic in the little things and turn them into something extraordinary. You help me see the world from a whole new perspective ✨." },
+    { title: "Your hugs", text: "Your hugs feel like the warmest, safest home. It's where I always feel loved and protected 🏡." },
+    { title: "Your love", text: "The love you give me makes me better every single day, and it makes me fall deeper in love with you over and over again 💕." },
   ];
 
 

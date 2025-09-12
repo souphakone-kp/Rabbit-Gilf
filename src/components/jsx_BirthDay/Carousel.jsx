@@ -31,7 +31,8 @@ export default function Carousel({ images = [] }) {
               inset: 0,
               width: "100%",
               height: "100%",
-              objectFit: "cover",
+              objectFit: "contain", // เปลี่ยนจาก "cover" เป็น "contain" เพื่อแสดงรูปเต็ม
+              backgroundColor: "#f8fafc", // เพิ่มพื้นหลังสีอ่อน
             }}
           />
         </AnimatePresence>

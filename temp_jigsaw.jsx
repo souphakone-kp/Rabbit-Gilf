@@ -1,21 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Heart } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import ConfettiBurst from "./jsx_Jixsaw/ConfettiBurst";
 import generateEdges from "./jsx_Jixsaw/generateEdges";
 import buildPiecePath from "./jsx_Jixsaw/buildPiecePath";
-import HeartLoading from "./HeartLoading";
 
 // Real jigsaw-piece SVG implementation with drag, snap, and win detection
 export default function Jigsaw({ images = [], defaultPieces = 16 }) {
   const containerRef = useRef(null);
-  const [pieceCount, setPieceCount] = useState(defaultPieces);
+    const [pieceCount, setPieceCount] = useState(defaultPieces);
   const [imgIndex, setImgIndex] = useState(0);
   const [pieces, setPieces] = useState([]); // {id,row,col,path,destX,destY,x,y,locked}
   const [dragId, setDragId] = useState(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [win, setWin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
  
   // Choose image by index
   const chosenSrc = useMemo(() => {
@@ -39,15 +38,6 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
 
   // Precompute random tab directions for edges so pieces interlock
   const edges = useMemo(() => generateEdges(grid.rows, grid.cols), [grid.rows, grid.cols]);
-
-  // Loading effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500); // แสดง loading 1.5 วินาที
-
-    return () => clearTimeout(timer);
-  }, []);
 
   // Build pieces on changes
   useEffect(() => {
@@ -82,8 +72,10 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
   useEffect(() => {
     if (!pieces.length) return;
     const solved = pieces.every((pc) => pc.locked);
-    setWin(solved);
-  }, [pieces]);
+    if (solved && !win) {
+      setWin(true);
+    }
+  }, [pieces, win]);
 
   function onShuffle() {
     setPieces((prev) =>
@@ -149,28 +141,6 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
 
   const solvedCount = pieces.filter((p) => p.locked).length;
 
-  // แสดง loading screen
-  if (isLoading) {
-    return (
-      <div style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fff7f9",
-        zIndex: 9999,
-      }}>
-        <HeartLoading size={100} color="#e11d48" />
-      </div>
-    );
-  }
-
   if (!chosenSrc) return null;
 
   return (
@@ -184,6 +154,7 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
           </div>
         </div>
       </motion.nav>
+
       <section className="bd-container" style={{ paddingBottom: "4rem" }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
           <h2 className="bd-section-title">Jigsaw Rabbit</h2>
@@ -192,7 +163,6 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
 
         <motion.div className="bd-card bd-toolbar" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 12 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }}>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            
             {images && images.length > 1 && (
               <>
                 <label style={{ fontSize: 14, color: "#6b7280" }}>Image:</label>
@@ -223,7 +193,7 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
           {win && <span style={{ color: "#16a34a", fontWeight: 700 }}>You solved it! 🎉</span>}
         </motion.div>
 
-        <div
+        <motion.div
           ref={containerRef}
           onMouseMove={onPointerMove}
           onMouseUp={onPointerUp}
@@ -241,6 +211,8 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
             marginInline: "auto",
             background: "radial-gradient(600px 380px at 20% 0%, #fff7f9 0%, transparent 70%), radial-gradient(600px 360px at 80% 0%, #fff1f5 0%, transparent 70%), #ffffff",
           }}
+          animate={win ? { scale: 1.02, filter: "saturate(1.1) brightness(1.05)" } : { scale: 1, filter: "saturate(1) brightness(1)" }}
+          transition={{ type: "spring", stiffness: 120, damping: 20 }}
         >
           <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ display: "block" }}>
             <defs>
@@ -280,38 +252,63 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
             })}
           </svg>
 
-          {win && (
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="win-overlay"
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "grid",
-                placeItems: "center",
-                background: "rgba(255,255,255,.75)",
-                backdropFilter: "blur(4px)",
-              }}
-            >
-              <motion.div className="bd-card" style={{ padding: "1rem 1.25rem", textAlign: "center" }} initial={{ scale: 0.95, y: 6 }} animate={{ scale: 1, y: 0 }} transition={{ duration: 0.2 }}>
-                <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#16a34a" }}>You Win! 🎉</div>
-                <div style={{ marginTop: 8, color: "#6b7280" }}>Great job solving the puzzle.</div>
-                <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 12 }}>
-                  <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }} onClick={onShuffle} className="bd-btn bd-btn-primary">Play Again</motion.button>
+          <AnimatePresence>
+            {win && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="win-overlay"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "grid",
+                  placeItems: "center",
+                  background: "radial-gradient(60% 60% at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 35%, rgba(255,255,255,0.4) 65%, rgba(255,255,255,0.0) 100%)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                <motion.div
+                  className="bd-card"
+                  style={{ padding: "1.2rem 1.5rem", textAlign: "center", position: "relative", zIndex: 10 }}
+                  initial={{ scale: 0.8, y: 20, opacity: 0 }}
+                  animate={{ scale: 1, y: 0, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.1 }}
+                >
+                  <motion.div 
+                    style={{ fontSize: "1.8rem", fontWeight: 800, color: "#16a34a" }}
+                    initial={{ scale: 0.5 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
+                  >
+                    You Win! 🎉
+                  </motion.div>
+                  <motion.div 
+                    style={{ marginTop: 8, color: "#6b7280" }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    Great job solving the puzzle.
+                  </motion.div>
+                  <motion.div 
+                    style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 12 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }} onClick={onShuffle} className="bd-btn bd-btn-primary">Play Again</motion.button>
+                  </motion.div>
+                </motion.div>
+                <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 5 }}>
+                  <ConfettiBurst />
                 </div>
               </motion.div>
-            </motion.div>
-          )}
-        </div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </section>
     </>
   );
 }
-
-
-
-
-
- 
