@@ -4,7 +4,7 @@ import { Gift } from "lucide-react";
 export default function ReasonsGrid({ reasons = [], reasonsImages = [] }) {
   const list = reasons.length ? reasons : DEFAULT_REASONS;
   return (
-    <section className="bd-container" style={{ paddingBottom: "4rem" }}>
+    <section  id="10reason" className="bd-container" style={{ paddingBottom: "4rem" }}>
       <h2 className="bd-section-title">
         <Gift size={22} color="#e11d48" /> 10 Reasons I Love You
       </h2>

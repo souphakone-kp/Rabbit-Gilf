@@ -7,7 +7,7 @@ import buildPiecePath from "./jsx_Jixsaw/buildPiecePath";
 import HeartLoading from "./HeartLoading";
 
 // Real jigsaw-piece SVG implementation with drag, snap, and win detection
-export default function Jigsaw({ images = [], defaultPieces = 16 }) {
+export default function Jigsaw({ images = [], defaultPieces = 6 }) {
   const containerRef = useRef(null);
   const [pieceCount, setPieceCount] = useState(defaultPieces);
   const [imgIndex, setImgIndex] = useState(0);
@@ -16,7 +16,7 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [win, setWin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
- 
+
   // Choose image by index
   const chosenSrc = useMemo(() => {
     if (!images || images.length === 0) return null;
@@ -192,7 +192,7 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
 
         <motion.div className="bd-card bd-toolbar" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 12 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }}>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            
+
             {images && images.length > 1 && (
               <>
                 <label style={{ fontSize: 14, color: "#6b7280" }}>Image:</label>
@@ -281,7 +281,7 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
           </svg>
 
           {win && (
-            
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -314,4 +314,3 @@ export default function Jigsaw({ images = [], defaultPieces = 16 }) {
 
 
 
- 

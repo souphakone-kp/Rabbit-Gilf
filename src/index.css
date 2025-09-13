@@ -113,7 +113,11 @@
    color: var(--bd-theme-ink);
    box-shadow: 0 10px 24px rgba(225,29,72,.25);
  }
- .bd-btn-primary:hover { box-shadow: 0 14px 28px rgba(225,29,72,.3); }
+ .bd-btn-primary:hover { 
+  background: #ff537e;   
+  border-color: #fff;     
+  box-shadow: 0 14px 28px rgba(225,29,72,.25);
+}
  
  .bd-input, input[type="number"], input[type="text"], select {
    padding: .45rem .65rem;

@@ -10,6 +10,8 @@ import love5 from "./assets/love5.png";
 import love6 from "./assets/love6.png";
 import love7 from "./assets/love7.png";
 import happyBirthday from "./mp3/happy-birthday-334876.mp3";
+import vdoToNutsea1 from "./vdo/vdoToNut_sea1.MP4";
+import vdoToNutsea2 from "./vdo/vdoToNut_sea2.MP4";
 import vdoToNut1 from "./vdo/vdoToNut1.MP4";
 import vdoToNut2 from "./vdo/vdoToNut2.MP4";
 import vdoToNut3 from "./vdo/vdoToNut3.MP4";
@@ -34,7 +36,7 @@ export default function App() {
   const location = useLocation();
   const imgs = [love1, love2, love3, love4, love5, love6, love7];
   const reasonsImages = [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10];
-  const loveVideos = [vdoToNut1, vdoToNut2, vdoToNut3, vdoToNut4, vdoToNut5, vdoToNut6];
+  const loveVideos = [vdoToNutsea1,vdoToNutsea2,vdoToNut1, vdoToNut2, vdoToNut3, vdoToNut4, vdoToNut5, vdoToNut6];
 
   return (
     <AnimatePresence mode="wait">

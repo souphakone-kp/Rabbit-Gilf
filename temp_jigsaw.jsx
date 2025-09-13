@@ -7,7 +7,7 @@ import generateEdges from "./jsx_Jixsaw/generateEdges";
 import buildPiecePath from "./jsx_Jixsaw/buildPiecePath";
 
 // Real jigsaw-piece SVG implementation with drag, snap, and win detection
-export default function Jigsaw({ images = [], defaultPieces = 16 }) {
+export default function Jigsaw({ images = [], defaultPieces = 5 }) {
   const containerRef = useRef(null);
     const [pieceCount, setPieceCount] = useState(defaultPieces);
   const [imgIndex, setImgIndex] = useState(0);

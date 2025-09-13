@@ -21,7 +21,7 @@ export default function NavbarControls({
           <PartyPopper size={20} color="#e11d48" />
           {/* +++ Personalized title */}
           <span>
-            Happy Birthday {celebrant} — from {fromName}
+            Happy Birthday {celebrant}
           </span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>

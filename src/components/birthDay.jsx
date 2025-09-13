@@ -12,6 +12,8 @@ import SiteFooter from "./jsx_BirthDay/SiteFooter";
 import ImageGridPlaceholders from "./jsx_BirthDay/ImageGridPlaceholders";
 import { Link } from "react-router-dom";
 import HeartLoading from "./HeartLoading";
+import { MessageCircleHeart } from "lucide-react";
+import { BsEnvelopeFill } from "react-icons/bs";
 
 export default function BirthdaySite({
   celebrant = "LookNut",    
@@ -142,7 +144,7 @@ function Hero({ celebrant, isPast, d, h, m, s, heroImage }) {
           className="bd-fade-up"
         >
           <h1 className="bd-title-xl">
-            Happy Birthday,
+            Happy Birthday
             <span className="bd-title-accent"> {celebrant} ❤️</span>
           </h1>
           <p className="bd-lead">
@@ -154,26 +156,37 @@ function Hero({ celebrant, isPast, d, h, m, s, heroImage }) {
             <a
               href="#"
               onClick={(e) => { e.preventDefault(); document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="bd-btn bd-btn-ghost"
+              className="bd-btn "
               style={{ textDecoration: "none" }}
               role="button"
             >
               <Images size={16} color="#e11d48" /> Memories
             </a>
+
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); document.getElementById("letter")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="bd-btn bd-btn-primary"
+              onClick={(e) => { e.preventDefault(); document.getElementById("10reason")?.scrollIntoView({ behavior: "smooth" }); }}
+              className="bd-btn  "
               style={{ textDecoration: "none" }}
               role="button"
             >
-              <Heart size={16} /> Open Love Letter
+              <BsEnvelopeFill size={16} color="#e11d48" /> Reason
+            </a>
+
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); document.getElementById("letter")?.scrollIntoView({ behavior: "smooth" }); }}
+              className="bd-btn  "
+              style={{ textDecoration: "none" }}
+              role="button"
+            >
+              <Heart size={16}  color="#e11d48"/> Open Love Letter
             </a>
             <Link to="/jigsaw" className="bd-btn bd-btn-primary" style={{ textDecoration: "none" }}>
-              <Heart size={16} /> Play Jigsaw
+              <Heart size={16} color="white "/> Play Jigsaw
             </Link>
-            <Link to="/messages" className="bd-btn" style={{ textDecoration: "none" }}>
-              <Heart size={16} color="#e11d48" /> Love Messages
+            <Link to="/messages" className="bd-btn bd-btn-primary" style={{ textDecoration: "none" }}>
+              <MessageCircleHeart size={16} color="white " /> Love Messages
             </Link>
           </div>
         </motion.div>
@@ -212,7 +225,7 @@ function Gallery({ images }) {
       {images && images.length > 0 ? <Carousel images={images} /> : <ImageGridPlaceholders count={6} />}
 
       <div style={{ marginTop: 12, fontSize: 14, color: "#6b7280" }}>
-        Tip: put your photos in <code>public/</code> and pass paths like <code>"/us1.jpg"</code> via the <code>images</code> prop.
+      Miss you like crazy Mooment🐰.
       </div>
     </section>
   );
