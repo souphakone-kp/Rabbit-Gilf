@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Heart } from "lucide-react";
+import { Heart, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import generateEdges from "./jsx_Jixsaw/generateEdges";
@@ -185,10 +185,49 @@ export default function Jigsaw({ images = [], defaultPieces = 6 }) {
         </div>
       </motion.nav>
       <section className="bd-container" style={{ paddingBottom: "4rem" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
-          <h2 className="bd-section-title">Jigsaw Rabbit</h2>
-          <div style={{ color: "#6b7280", fontSize: 14 }}>Solved: <strong style={{ color: "#111827" }}>{solvedCount}</strong> / {pieces.length}</div>
-        </div>
+        {/* +++ Fancy Header */}
+<motion.div
+  className="bd-header"
+  initial={{ opacity: 0, y: -6 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.25 }}
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    marginBottom: 8,
+  }}
+>
+  {/* Left: Title */}
+  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <div className="bd-title-chip">
+      <Sparkles size={14} />
+      <span>Play</span>
+    </div>
+    <h2 className="bd-section-title bd-gradient-text" style={{ margin: 0 }}>
+      Jigsaw Rabbit
+    </h2>
+  </div>
+
+  {/* Right: Stats pill */}
+  <div className="bd-stats">
+    <span className="bd-stats-label">Solved</span>
+    <strong className="bd-stats-strong">
+      {solvedCount} <span className="bd-stats-slash">/</span> {pieces.length}
+    </strong>
+
+    {/* mini progress */}
+    <div className="bd-progress">
+      <div
+        className="bd-progress-fill"
+        style={{
+          width: `${pieces.length ? Math.round((solvedCount / pieces.length) * 100) : 0}%`,
+        }}
+      />
+    </div>
+  </div>
+</motion.div>
 
         <motion.div className="bd-card bd-toolbar" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 12 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }}>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
