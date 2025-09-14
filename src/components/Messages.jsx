@@ -1,21 +1,56 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HeartLoading from "./HeartLoading";
 
 const API_BASE = "https://68c2fcadf9928dbf33f063ba.mockapi.io/Rabbi/api";
-const ENDPOINT = "rabitMessage"; // updated endpoint per spec
+const ENDPOINT = "rabitMessage";
+
+function FullscreenLoading() {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      style={{
+        position: "fixed",
+        inset: 0,                 
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center", 
+        backgroundColor: "#fff7f9",
+        zIndex: 9999,        
+      }}
+    >
+      <HeartLoading size={100} color="#e11d48" />
+      <div style={{ marginTop: 12, fontWeight: 600, color: "#b91c1c" }}>
+      </div>
+    </div>
+  );
+}
 
 export default function Messages() {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState("");
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);  
 
-  const [name, setName] = useState("Boss");
+  const [name, setName] = useState("LookNut");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const navigate = useNavigate();
+
+ 
+  const bottomRef = useRef(null);
+
+  const scrollToBottom = (smooth = true) => {
+    bottomRef.current?.scrollIntoView({
+      behavior: smooth ? "smooth" : "auto",
+      block: "end",
+    });
+  };
 
   const fetchMessages = async () => {
     try {
@@ -32,20 +67,38 @@ export default function Messages() {
     }
   };
 
+ 
+  useLayoutEffect(() => {
+    if (isInitialLoading) {
+      const previous = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = previous;
+      };
+    }
+  }, [isInitialLoading]);
+
   useEffect(() => {
-    // Initial loading effect
-    const timer = setTimeout(() => {
-      setIsInitialLoading(false);
-    }, 1500);
-
-    fetchMessages();
-
+ 
+    const timer = setTimeout(() => setIsInitialLoading(false), 1000); 
+    fetchMessages().then(() => {
+ 
+      scrollToBottom(false);
+    });
     return () => clearTimeout(timer);
   }, []);
 
-  const sorted = useMemo(() => {
-    return [...items].sort((a, b) => (b.massage_sent_time || 0) - (a.massage_sent_time || 0));
+  const sortedAsc = useMemo(() => {
+    return [...items].sort(
+      (a, b) => (a.massage_sent_time || 0) - (b.massage_sent_time || 0)
+    );
   }, [items]);
+
+  useEffect(() => {
+    if (!loading && !isInitialLoading) {
+      scrollToBottom(true);
+    }
+  }, [sortedAsc, loading, isInitialLoading]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -65,6 +118,7 @@ export default function Messages() {
       if (!res.ok) throw new Error(`Submit failed: ${res.status}`);
       setMessage("");
       await fetchMessages();
+      scrollToBottom();
     } catch (e) {
       alert(e.message || "Submit failed");
     } finally {
@@ -75,40 +129,27 @@ export default function Messages() {
   const onDelete = async (id) => {
     if (!confirm("Delete this message?")) return;
     try {
-      const res = await fetch(`${API_BASE}/${ENDPOINT}/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/${ENDPOINT}/${id}`, {
+        method: "DELETE",
+      });
       if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
       await fetchMessages();
+      scrollToBottom();
     } catch (e) {
       alert(e.message || "Delete failed");
     }
   };
 
-  // แสดง initial loading screen
+  // +++ ฟูลสกรีนโหลดครั้งแรก (เต็มจอ 100% ไอคอนกลางหน้าจอ)
   if (isInitialLoading) {
-    return (
-      <div style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fff7f9",
-        zIndex: 9999,
-      }}>
-        <HeartLoading size={100} color="#e11d48" />
-      </div>
-    );
+    return <FullscreenLoading  />;
   }
 
+
   return (
-    <div className="bd-container" style={{ padding: "2rem 0 3rem" }}>
-      {/* Top nav */}
-      <div className="bd-navbar bd-card" style={{ position: "sticky", top: 0, marginBottom: 16 }}>
+    <div className="bd-container" style={{ padding: "2rem 0 3rem"  }}>
+ 
+      <div className="bd-navbar bd-card" style={{ position: "sticky", top: 0, marginBottom: 16, zIndex: 5  , marginLeft:20, marginRight:20}}>
         <div className="bd-nav-row">
           <button className="bd-btn" onClick={() => navigate(-1)} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
             <span style={{ display: "inline-block", width: 8, height: 8, borderLeft: "2px solid currentColor", borderBottom: "2px solid currentColor", transform: "rotate(45deg)" }} />
@@ -120,7 +161,7 @@ export default function Messages() {
       </div>
 
       {/* Composer */}
-      <form onSubmit={onSubmit} className="bd-card" style={{ padding: 16, marginBottom: 16, display: "grid", gap: 12 }}>
+      <form onSubmit={onSubmit} className="bd-card" style={{ padding: 16, marginBottom: 12, display: "grid", gap: 12 , marginLeft:20, marginRight:20}}>
         <div style={{ display: "grid", gap: 6 }}>
           <label style={{ fontWeight: 600 }}>From</label>
           <div style={{ position: "relative", display: "inline-block" }}>
@@ -131,41 +172,70 @@ export default function Messages() {
             <span style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#6b7280" }}>▼</span>
           </div>
         </div>
+
         <div style={{ display: "grid", gap: 6 }}>
           <label style={{ fontWeight: 600 }}>Message</label>
-          <input className="bd-input" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Write something sweet..." />
+          <textarea
+            className="bd-input"
+            rows={2}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Write something sweet..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSubmit(e);
+              }
+            }}
+          />
         </div>
+
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button className="bd-btn bd-btn-primary" disabled={submitting}>{submitting ? "Sending..." : "Send"}</button>
-          <button type="button" className="bd-btn" onClick={fetchMessages} disabled={loading}>Refresh</button>
+          <button className="bd-btn bd-btn-primary" disabled={submitting}>
+            {submitting ? "Sending..." : "Send"}
+          </button>
+          <button type="button" className="bd-btn" onClick={() => { fetchMessages().then(() => scrollToBottom()); }} disabled={loading}>
+            Refresh
+          </button>
         </div>
       </form>
 
       {loading && <div className="bd-card" style={{ padding: 16 }}>Loading...</div>}
       {error && <div className="bd-card" style={{ padding: 16, color: "#b91c1c" }}>Error: {error}</div>}
 
+ 
       {!loading && !error && (
-        <div className="bd-card" style={{ padding: 0 }}>
-          <div style={{ display: "grid", gap: 0, padding: 12 }}>
-            {sorted.length === 0 && (
-              <div className="bd-card" style={{ padding: 16, margin: 8 }}>No messages yet.</div>
+        <div className="bd-card" style={{ padding: 0, marginLeft:20, marginRight:20 }}>
+          <div
+            style={{
+              display: "flex",         
+              flexDirection: "column",
+              gap: 0,
+              padding: 12,
+              height: "calc(80vh - 280px)",  
+              overflowY: "auto",           
+            }}
+          >
+            {sortedAsc.length === 0 && (
+              <div className="bd-card" style={{ padding: 16, margin: 8 }}>
+                No messages yet.
+              </div>
             )}
-            {sorted.map((m) => {
-              const isBoss = (m.name || "").toLowerCase() === "boss";
+
+            {sortedAsc.map((m) => {
+              const isLookNut = (m.name || "").toLowerCase() === "looknut";
               return (
-                <div key={m.id} style={{ display: "grid", justifyContent: isBoss ? "end" : "start", padding: "6px 4px" }}>
-                  <div style={{ display: "flex", gap: 8, alignItems: "flex-end", flexDirection: isBoss ? "row-reverse" : "row" }}>
-                    {/* Avatar */}
-                    <div title={m.name} style={{ width: 32, height: 32, borderRadius: 999, background: isBoss ? "#60a5fa" : "#fb7185", color: "#fff", display: "grid", placeItems: "center", fontWeight: 700, fontSize: 12 }}>
+                <div key={m.id} style={{ display: "grid", justifyContent: isLookNut ? "end" : "start", padding: "6px 4px" }}>
+                  <div style={{ display: "flex", gap: 8, alignItems: "flex-end", flexDirection: isLookNut ? "row-reverse" : "row" }}>
+                    <div title={m.name} style={{ width: 32, height: 32, borderRadius: 999, background: isLookNut ? "#fb7185" : "#60a5fa",  color: "#fff", display: "grid", placeItems: "center", fontWeight: 700, fontSize: 12 }}>
                       {(m.name || "?").charAt(0).toUpperCase()}
                     </div>
-                    {/* Bubble */}
-                    <div className="bd-card" style={{ maxWidth: 520, padding: 10, borderRadius: 14, borderTopLeftRadius: isBoss ? 14 : 4, borderTopRightRadius: isBoss ? 4 : 14, background: isBoss ? "#e0f2fe" : "#fee2e2" }}>
+                    <div className="bd-card" style={{ maxWidth: 520, padding: 10, borderRadius: 14, borderTopLeftRadius: isLookNut ? 14 : 4, borderTopRightRadius: isLookNut ? 4 : 14, background: isLookNut ? "#fee2e2" : "#e0f2fe" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
                         <div style={{ fontWeight: 700, color: "#111827" }}>{m.name || "Anonymous"}</div>
                         <time style={{ color: "#6b7280", fontSize: 11 }}>{formatUnixTime(m.massage_sent_time)}</time>
                       </div>
-                      <div style={{ marginTop: 6 }}>{m.message}</div>
+                      <div style={{ marginTop: 6, whiteSpace: "pre-wrap" }}>{m.message}</div>
                       <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                         <button className="bd-btn" style={{ padding: "4px 8px" }} onClick={() => onDelete(m.id)}>Delete</button>
                       </div>
@@ -174,6 +244,9 @@ export default function Messages() {
                 </div>
               );
             })}
+
+    
+            <div ref={bottomRef} />
           </div>
         </div>
       )}
@@ -189,4 +262,4 @@ function formatUnixTime(sec) {
   } catch {
     return "";
   }
-} 
+}

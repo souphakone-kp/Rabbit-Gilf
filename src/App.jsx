@@ -67,7 +67,7 @@ export default function App() {
               />
             }
           />
-          <Route path="/jigsaw" element={<Jigsaw images={imgs} defaultPieces={16} />} />
+          <Route path="/jigsaw" element={<Jigsaw images={imgs} defaultPieces={5} />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

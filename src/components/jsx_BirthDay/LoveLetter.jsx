@@ -12,50 +12,39 @@ export default function LoveLetter({
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // ใช้ loveVideoUrls ถ้ามี หรือใช้ loveVideoUrl เดียว
   const videos = loveVideoUrls.length > 0 ? loveVideoUrls : (loveVideoUrl ? [loveVideoUrl] : []);
-
-  // ฟังก์ชันสำหรับเปลี่ยนวิดีโอถัดไป
   const handleVideoEnd = () => {
     if (videos.length > 1) {
       setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
     }
   };
 
-  // ฟังก์ชันสำหรับคลิกเปลี่ยนวิดีโอถัดไป
   const handleNextVideo = () => {
     if (videos.length > 1) {
       setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
     }
   };
 
-  // ฟังก์ชันสำหรับเล่น/หยุดวิดีโอ
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
   };
 
-  // Auto-play เมื่อเปลี่ยนวิดีโอ
   useEffect(() => {
     const videoElement = document.querySelector('video');
     if (videoElement && videos.length > 0) {
       videoElement.play().catch(() => {
-        // ถ้า autoplay ไม่ทำงาน (browser policy) จะไม่แสดง error
       });
     }
   }, [currentVideoIndex, videos.length]);
 
-  // ฟังก์ชันเมื่อวิดีโอโหลดเสร็จ
   const handleVideoLoaded = () => {
     setIsLoading(false);
   };
 
-  // ฟังก์ชันเมื่อเปลี่ยนวิดีโอ
   const handleVideoChange = () => {
     setIsLoading(true);
   };
 
-  // เปลี่ยนวิดีโอ
   useEffect(() => {
     handleVideoChange();
   }, [currentVideoIndex]);
@@ -117,12 +106,10 @@ export default function LoveLetter({
               overflow: "hidden",
               boxShadow: "0 18px 40px rgba(0,0,0,0.12)",
               border: "1px solid #fee2e2",
-              // เปลี่ยนจาก aspect-ratio 16:9 เป็น auto height
-              minHeight: "400px", // ความสูงขั้นต่ำ
-              maxHeight: "80vh", // ความสูงสูงสุด 80% ของ viewport
+              minHeight: "400px",  
+              maxHeight: "80vh",  
             }}
           >
-            {/* Loading Animation */}
             {isLoading && (
               <div style={{
                 position: "absolute",
@@ -144,14 +131,14 @@ export default function LoveLetter({
               minHeight: "400px"
             }}>
               <video
-                key={currentVideoIndex} // ใช้ key เพื่อบังคับ re-render เมื่อเปลี่ยนวิดีโอ
+                key={currentVideoIndex} 
                 src={videos[currentVideoIndex]}
                 controls
                 playsInline
                 preload="metadata"
                 autoPlay
                 muted
-                loop={videos.length === 1} // loop เฉพาะเมื่อมีวิดีโอเดียว
+                loop={videos.length === 1}  
                 onEnded={handleVideoEnd}
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
@@ -163,13 +150,12 @@ export default function LoveLetter({
                   inset: 0,
                   width: "100%",
                   height: "100%",
-                  objectFit: "contain", // เปลี่ยนจาก "cover" เป็น "contain" เพื่อแสดงวิดีโอเต็ม
+                  objectFit: "contain", 
                   display: "block",
                 }}
               />
             </div>
-            
-            {/* แสดงข้อมูลวิดีโอปัจจุบัน */}
+          
             {videos.length > 1 && (
               <div style={{
                 position: "absolute",
