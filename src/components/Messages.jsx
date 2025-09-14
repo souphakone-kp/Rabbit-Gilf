@@ -169,7 +169,7 @@ export default function Messages() {
               <option value="LookNut">LookNut</option>
               <option value="Boss">Boss</option>
             </select>
-            <span style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#6b7280" }}>▼</span>
+          
           </div>
         </div>
 
